@@ -1,7 +1,10 @@
 var express = require("express")
 var router = express.Router()
 var users = require("./../inc/users")
+var admin = require("./../inc/admin")
 
+
+// Middleware
 
 router.use(function(req, res, next) {
 
@@ -19,6 +22,15 @@ router.use(function(req, res, next) {
 })
 
 
+router.use(function(req, res, next) {
+
+  req.menus = admin.getMenus(req)
+
+  next() 
+
+})
+
+
 router.get('/logout', (req, res, next) => {
 
   delete req.session.user
@@ -28,7 +40,7 @@ router.get('/logout', (req, res, next) => {
 
 router.get('/', (req, res, next) => {
 
-  res.render('admin/index')
+  res.render('admin/index', admin.getParams (req))
   
 })
 
@@ -65,33 +77,33 @@ router.get('/login', (req, res, next) => {
 
 router.get('/contacts', (req, res, next) => {
 
-  res.render('admin/contacts')
+  res.render('admin/contacts', admin.getParams (req))
 
 })
 
 router.get('/emails', (req, res, next) => {
 
-  res.render('admin/emails')
+  res.render('admin/emails', admin.getParams (req))
 
 })
 
 router.get('/menus', (req, res, next) => {
 
-  res.render('admin/menus')
+  res.render('admin/menus', admin.getParams (req))
 
 })
 
 router.get('/reservations', (req, res, next) => {
 
-  res.render('admin/reservations', {
+  res.render('admin/reservations', admin.getParams (req, { 
     date: {}
-  })
+  }))
 
 })
 
 router.get('/users', (req, res, next) => {
 
-  res.render('admin/users')
+  res.render('admin/users', admin.getParams (req))
 
 })
 
