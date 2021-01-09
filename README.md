@@ -1,2 +1,2 @@
 # restaurante
- aplicacao de teste de javascript
+ aplicacao de teste para curso de javascript.
