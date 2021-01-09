@@ -2,10 +2,34 @@ var express = require("express")
 var router = express.Router()
 var users = require("./../inc/users")
 
+
+router.use(function(req, res, next) {
+
+  let semAutenticacao = ['/login']
+
+  // Se pagina precisa de login e nao esta logado
+  if (semAutenticacao.indexOf(req.url) === -1 && !req.session.user) {
+
+     res.redirect('/admin/login')
+   } else {
+    
+     next()
+   }
+  
+})
+
+
+router.get('/logout', (req, res, next) => {
+
+  delete req.session.user
+
+  res.redirect('/admin/login')  
+})
+
 router.get('/', (req, res, next) => {
 
   res.render('admin/index')
-
+  
 })
 
 router.post('/login', (req, res, next) => {
@@ -22,10 +46,9 @@ router.post('/login', (req, res, next) => {
         req.session.user = user
 
         res.redirect("/admin")
+
       })
       .catch((err) => {
-
-        console.log('admin.js - erro --> ', err)
 
         users.render(req, res, err.message || err)
       })
@@ -36,11 +59,7 @@ router.post('/login', (req, res, next) => {
 
 router.get('/login', (req, res, next) => {
 
-  console.log('users: ', users)
-
   users.render(req, res, null)
-
-  //  res.render('admin/login')
 
 })
 

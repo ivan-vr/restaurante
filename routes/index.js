@@ -27,18 +27,12 @@ router.get('/', function(req, res, next) {
 /* GET home page. */
 router.get('/contacts', function(req, res, next) {
 
-  console.log('GET Contacts')
-
-
   contacts.render(req, res)
 
 })
 
 /* POST home page. */
 router.post('/contacts', function(req, res, next) {
-
-  console.log('POST Contacts')
-
 
   if (!req.body.name) {
     contacts.render(req, res, 'Digite o nome')
@@ -52,8 +46,6 @@ router.post('/contacts', function(req, res, next) {
   } else {
 
     contacts.save(req.body).then((results) => {
-
-      console.log(req.body)
 
       req.body = {}
       
