@@ -1,9 +1,10 @@
 var express = require('express');
-var router = express.Router();
 var conn = require('./../inc/db');
 var menus = require('./../inc/menus');
 var reservations = require('./../inc/reservations');
 var contacts = require('./../inc/contacts');
+
+var router = express.Router();
 
 
 /* GET home page. */
