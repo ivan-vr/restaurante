@@ -1,2 +1,2 @@
 # restaurante
- aplicacao de teste
+ aplicacao de teste de javascript
