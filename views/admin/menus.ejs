@@ -163,6 +163,7 @@ formCreate.addEventListener('submit', (e) => {
     .then(response => response.json())
     .then(json => { 
 
+      window.location.reload()
       console.log('JSON: ', json)
     })
     .catch(err => { 
