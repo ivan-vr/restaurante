@@ -28,10 +28,6 @@ app.use(function (req, res, next) {
       keepExtensions: true
     })
 
-    console.log('BODY === ', req.body)
-    console.log('FIELDS === ', req.fields)
-    console.log('FILES === ', req.files)
-
      form.parse(req, function (err, fields, files) {
       
        req.fields = fields

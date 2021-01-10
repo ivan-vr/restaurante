@@ -45,7 +45,7 @@
                   <td> <%= row.title %> </td>
                   <td> <%= row.description %> </td>
                   <td> <%= row.price %> </td>
-                  <td><button type="button" class="btn btn-xs btn-info btn-update" data-toggle="modal" data-target="#modal-update"><i
+                  <td><button type="button" class="btn btn-xs btn-info btn-update" ><i
                         class="fa fa-pencil"></i> Editar</button>&nbsp;<button type="button" class="btn btn-xs btn-danger btn-delete"><i
                         class="fa fa-trash"></i> Excluir</button></td>
                 </tr>
@@ -146,7 +146,15 @@
 
 <%- include("inc/footer.ejs") -%>
 
+
+<script src="/js/hcode-filereader.js"></script>
+
 <script>
+
+new HCodeFileReader('#modal-create [type=file]', '#modal-create img')
+
+new HCodeFileReader('#modal-update [type=file]', '#modal-update img')
+
 
 let formCreate = document.querySelector('#modal-create form')
 
@@ -164,7 +172,7 @@ formCreate.addEventListener('submit', (e) => {
     .then(json => { 
 
       window.location.reload()
-      console.log('JSON: ', json)
+
     })
     .catch(err => { 
       
@@ -173,6 +181,43 @@ formCreate.addEventListener('submit', (e) => {
 
 })
 
+let formUpdate = document.querySelector('#modal-update form')
+
+let arrayBtn = [...document.querySelectorAll('.btn-update')]
+arrayBtn.forEach(btn => {
+
+  btn.addEventListener('click', e => {
+
+    let tr = e.path.find (el => {
+      return el.tagName.toUpperCase() === 'TR'
+    })
+
+    let data = JSON.parse(tr.dataset.row)
+
+    for (let name in data) {
+
+      if (name === 'photo') {
+
+        formUpdate.querySelector('img').src = '/'+data[name]
+
+      } else {
+
+        let input = formUpdate.querySelector(`[name=${name}]`)
+
+        if (input) {
+
+          input.value = data[name]
+        }
+
+      }
+
+    }
+
+    $('#modal-update').modal('show')
+
+  })
+
+});
 
 
 </script>

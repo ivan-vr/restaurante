@@ -112,9 +112,6 @@ router.get('/menus', (req, res, next) => {
 
 router.post('/menus', function (req, res, next) {
 
-  console.log ('POST MENUS -- REQ FIELDS ==: ', req.fields)
-//  console.log ('POST MENUS -- REQ FILES ==: ', req.files)
-
   menus.save(req.fields, req.files)
   .then((results) => {
 
@@ -125,10 +122,6 @@ router.post('/menus', function (req, res, next) {
 
     res.send(err)
   })
-
-
-//res.send(req.files)
-//res.send(req.body)
 
 })
 
