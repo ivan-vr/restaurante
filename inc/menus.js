@@ -23,6 +23,30 @@ module.exports = {
       })
     
     }) 
+  }, 
+
+  save (fields, files) {
+
+    return new Promise ((resolve, reject) => {
+
+      let sql = `insert into saboroso.tb_contacts
+      (name, email, message)
+      values
+      (?,?,?)`
+
+      conn.query(sql, 
+      [fields.name, fields.email, fields.message],
+      (err, results) => {
+        if (err) {
+          reject (err)
+        } else {
+          resolve(results)
+        }
+      })
+
+    })
+
+
   }
 
 }

@@ -21,8 +21,6 @@ app.use(function (req, res, next) {
 
   let contentType = req.headers["content-type"];
 
-  console.log('METHOD === ', req.method)
-  //  console.log('BODY === ', req.body)
   if (req.method == 'POST' && contentType.indexOf('multipart/form-data;') > -1) {
 
     var form = formidable.IncomingForm({
@@ -35,15 +33,12 @@ app.use(function (req, res, next) {
     console.log('FILES === ', req.files)
 
      form.parse(req, function (err, fields, files) {
-
       
        req.fields = fields
        req.files = files
 
-     next()
+       next()
      })
-
-//  next()
 
   } else {
 
@@ -62,8 +57,6 @@ var redisClient = redis.createClient()
 app.use(session({
   store: new RedisStore({
     client: redisClient
-    //      host: 'localhost',
-    //    port: 6379
   }),
   secret: 'passw0rd',
   resave: true,
