@@ -8,12 +8,50 @@ var redis = require("redis")
 var session = require('express-session')
 var RedisStore = require('connect-redis')(session)
 
+var formidable = require('formidable')
+
 var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin');
 
 
 var app = express();
 
+
+app.use(function (req, res, next) {
+
+  let contentType = req.headers["content-type"];
+
+  console.log('METHOD === ', req.method)
+  //  console.log('BODY === ', req.body)
+  if (req.method == 'POST' && contentType.indexOf('multipart/form-data;') > -1) {
+
+    var form = formidable.IncomingForm({
+      uploadDir: path.join(__dirname, '/public/images'),
+      keepExtensions: true
+    })
+
+    console.log('BODY === ', req.body)
+    console.log('FIELDS === ', req.fields)
+    console.log('FILES === ', req.files)
+
+     form.parse(req, function (err, fields, files) {
+
+      
+       req.fields = fields
+       req.files = files
+
+     next()
+     })
+
+//  next()
+
+  } else {
+
+    next()
+
+  }
+
+})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -22,14 +60,14 @@ app.set('view engine', 'ejs');
 var redisClient = redis.createClient()
 
 app.use(session({
-    store: new RedisStore({
-      client: redisClient
-//      host: 'localhost',
-  //    port: 6379
-    }),
-    secret: 'passw0rd',
-    resave:true,
-    saveUninitialized:true
+  store: new RedisStore({
+    client: redisClient
+    //      host: 'localhost',
+    //    port: 6379
+  }),
+  secret: 'passw0rd',
+  resave: true,
+  saveUninitialized: true
 }))
 
 app.use(logger('dev'));
@@ -42,12 +80,12 @@ app.use('/', indexRouter);
 app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

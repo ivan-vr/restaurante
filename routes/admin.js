@@ -57,6 +57,10 @@ router.get('/', (req, res, next) => {
 
 router.post('/login', (req, res, next) => {
 
+
+  console.log ('POST LOGIN ==: ', req.body)
+
+
   if (!req.body.email) {
     users.render(req, res, 'Preencha o campo o email')
   } else if (!req.body.password) {
@@ -107,6 +111,16 @@ router.get('/menus', (req, res, next) => {
     }))
 
   })
+
+})
+
+router.post('/menus', function (req, res, next) {
+
+  console.log ('POST MENUS -- REQ BODY ==: ', req.fields)
+  console.log ('POST MENUS -- REQ FIELDS ==: ', req.fields)
+
+res.send(req.fields)
+//res.send(req.body)
 
 })
 
