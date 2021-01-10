@@ -1,8 +1,9 @@
 var conn = require('./db');
 
+var teste = 'teste'
+
 module.exports = {
 
-  
   render(req, res, error, success) {
 
     res.render('contacts', { 
@@ -15,7 +16,6 @@ module.exports = {
     })
     
   },
-
   
   save (fields) {
 
