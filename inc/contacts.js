@@ -1,9 +1,8 @@
 var conn = require('./db');
 
-module.exports = {
+var verificacao = 'verificacao 1'
 
-  
-  
+module.exports = {
 
   render(req, res, error, success) {
 
@@ -17,7 +16,6 @@ module.exports = {
     })
     
   },
-
   
   save (fields) {
 
