@@ -2,6 +2,8 @@ var conn = require('./db');
 
 var verificacao = 'verificacao 1'
 
+var verificacao = 'verificacao 2'
+
 module.exports = {
 
   render(req, res, error, success) {
