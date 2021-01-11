@@ -49,7 +49,7 @@ router.get('/', (req, res, next) => {
     }))
 
   }).catch ((err) =>  {
-    console.err(err);
+    console.log(err);
   })
 
 })
