@@ -5,51 +5,66 @@ var admin = require("./../inc/admin")
 var menus = require("./../inc/menus")
 
 
-// Middleware
+// Inicio Middlewares
 
-router.use(function(req, res, next) {
+router.use(function (req, res, next) {
 
-  let semAutenticacao = ['/login']
+  let naoPrecisaTerSessionUser = ['/login']
 
-  // Se pagina precisa de login e nao esta logado
-  if (semAutenticacao.indexOf(req.url) === -1 && !req.session.user) {
+  // Se pagina precisa ter session user e nao esta logado
+  if (naoPrecisaTerSessionUser.indexOf(req.url) === -1 && !req.session.user) {
 
-     res.redirect('/admin/login')
-   } else {
-    
-     next()
-   }
-  
-})
+    res.redirect('/admin/login')
 
+  } else {
 
-router.use(function(req, res, next) {
-
-  req.menus = admin.getMenus(req)
-
-  next() 
+    next()
+  }
 
 })
+
+
+router.use(function (req, res, next) {
+
+  // Eu que incluí esse IF porque nao faz sentido carregar menus se nao 
+  // estah autenticado
+
+  let naoPrecisaTerSessionUser = ['/login']
+
+  if (naoPrecisaTerSessionUser.indexOf(req.url) === 0 && !req.session.user) {
+
+    next()
+
+  } else {
+
+    req.menus = admin.getMenus(req)
+
+    next()
+
+  }
+})
+
+// Fim Middlewares
 
 
 router.get('/logout', (req, res, next) => {
 
   delete req.session.user
 
-  res.redirect('/admin/login')  
+  res.redirect('/admin/login')
 })
 
 
 router.get('/', (req, res, next) => {
 
-  admin.dashboard().then ((data) => {
+  admin.dashboard().then((data) => {
 
-    res.render('admin/index', admin.getParams (req, {
+    res.render('admin/index', admin.getParams(req, {
       data
     }))
 
-  }).catch ((err) =>  {
-    console.err(err);
+  }).catch((err) => {
+    console.log(err);
   })
 
 })
@@ -88,13 +103,13 @@ router.get('/login', (req, res, next) => {
 
 router.get('/contacts', (req, res, next) => {
 
-  res.render('admin/contacts', admin.getParams (req))
+  res.render('admin/contacts', admin.getParams(req))
 
 })
 
 router.get('/emails', (req, res, next) => {
 
-  res.render('admin/emails', admin.getParams (req))
+  res.render('admin/emails', admin.getParams(req))
 
 })
 
@@ -102,7 +117,7 @@ router.get('/menus', (req, res, next) => {
 
   menus.getMenus().then(data => {
 
-    res.render('admin/menus', admin.getParams (req, {
+    res.render('admin/menus', admin.getParams(req, {
       data
     }))
 
@@ -110,9 +125,40 @@ router.get('/menus', (req, res, next) => {
 
 })
 
+router.post('/menus', function (req, res, next) {
+
+  menus.save(req.fields, req.files)
+    .then((results) => {
+
+      res.send(results)
+
+    })
+    .catch((err) => {
+
+      res.send(err)
+    })
+
+})
+
+router.delete('/menus/:id', function (req, res, next) {
+
+  menus.delete(req.params.id)
+    .then((results) => {
+
+      res.send(results)
+
+    })
+    .catch((err) => {
+
+      res.send(err)
+    })
+
+})
+
+
 router.get('/reservations', (req, res, next) => {
 
-  res.render('admin/reservations', admin.getParams (req, { 
+  res.render('admin/reservations', admin.getParams(req, {
     date: {}
   }))
 
@@ -120,7 +166,7 @@ router.get('/reservations', (req, res, next) => {
 
 router.get('/users', (req, res, next) => {
 
-  res.render('admin/users', admin.getParams (req))
+  res.render('admin/users', admin.getParams(req))
 
 })
 
