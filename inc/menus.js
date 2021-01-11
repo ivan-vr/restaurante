@@ -76,6 +76,25 @@ module.exports = {
     })
 
 
+  },
+
+
+  delete(id) {
+    return new Promise((resolve, reject) => {
+
+      sql = `delete from saboroso.tb_menus where id = ?`
+
+      conn.query(sql, [id], (err, results) => {
+
+        if (err) {
+          reject(err)
+        } else {
+          resolve(results)
+        }
+
+      })
+
+    })
   }
 
 }
