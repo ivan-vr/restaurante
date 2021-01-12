@@ -40,14 +40,21 @@
                 <% data.forEach(function(row) { %>
 
                 <tr data-row=" <%= JSON.stringify(row) %> ">
-                  <td> <%= row.id %>.</td>
+                  <td> <%= row.id %>. </td>
                   <td><img src=" /<%= row.photo %> " alt="" style="height: 18px;"></td>
                   <td> <%= row.title %> </td>
                   <td> <%= row.description %> </td>
                   <td> <%= row.price %> </td>
-                  <td><button type="button" class="btn btn-xs btn-info btn-update" ><i
-                        class="fa fa-pencil"></i> Editar</button>&nbsp;<button type="button" class="btn btn-xs btn-danger btn-delete"><i
-                        class="fa fa-trash"></i> Excluir</button></td>
+                  <td>
+                    <button type="button" class="btn btn-xs btn-info btn-update" >
+                      <i class="fa fa-pencil"></i> 
+                      Editar
+                    </button>&nbsp;
+                    <button type="button" class="btn btn-xs btn-danger btn-delete">
+                      <i class="fa fa-trash"></i> 
+                      Excluir
+                    </button>
+                  </td>
                 </tr>
 
                 <% }) %>
@@ -146,140 +153,39 @@
 
 <%- include("inc/footer.ejs") -%>
 
-
+<script src="/js/moment.min.js"></script>
 <script src="/js/hcode-filereader.js"></script>
-
 <script src="/js/hcode-formsave.js"></script>
+<script src="/js/hcode-grid.js"></script>
 
 <script>
 
 new HCodeFileReader('#modal-create [type=file]', '#modal-create img')
-
 new HCodeFileReader('#modal-update [type=file]', '#modal-update img')
 
-
-let formCreate = document.querySelector('#modal-create form')
-
-formCreate.save()
-  .then(json => { 
-
-    window.location.reload()
-
-  })
-  .catch(err => { 
-    
-    console.log(err)
-  })
-
-
-let formUpdate = document.querySelector('#modal-update form')
-
-formUpdate.save()
-  .then(json => { 
-
-    window.location.reload()
-
-  })
-  .catch(err => { 
-    
-    console.log(err)
-  })
-
-
-let arrayBtn = [...document.querySelectorAll('.btn-update')]
-arrayBtn.forEach(btn => {
-
-  btn.addEventListener('click', e => {
-
-    // No evento 'e' existe a chave 'path' que tem 'tr'
-    // Busca a 'tr' em 'path' e retorna para a variavel tr
-    let tr = e.path.find (el => {
-      return el.tagName.toUpperCase() === 'TR'
-    })
-
-/*
-    TR retornada
-    No data-row foi atribuido o json com as informacoes do menu
-
- <tr data-row=" {&#34;id&#34;:5,&#34;title&#34;:&#34;Comida boa&#34;,&#34;description&#34;:&#34;teste&#34;,&#34;price&#34;:&#34;66.00&#34;,&#34;photo&#34;:&#34;images/upload_1c14322b8249404aa6c58801ef9c554d.jpg&#34;,&#34;register&#34;:&#34;2021-01-10T21:57:31.000Z&#34;} ">
-                  <td> 5.</td>
-                  <td><img src=" /images/upload_1c14322b8249404aa6c58801ef9c554d.jpg " alt="" style="height: 18px;"></td>
-                  <td> Comida boa </td>
-                  <td> teste </td>
-                  <td> 66.00 </td>
-                  <td><button type="button" class="btn btn-xs btn-info btn-update" ><i
-                        class="fa fa-pencil"></i> Editar</button>&nbsp;<button type="button" class="btn btn-xs btn-danger btn-delete"><i
-                        class="fa fa-trash"></i> Excluir</button></td>
-                </tr>
-*/
-
-    // Como row é string, precisa usar o parse para criar um objeto 
-
-    let data = JSON.parse(tr.dataset.row)
-
-    for (let name in data) {
+new HcodeGrid ({
+  deleteUrl: '/admin/menus/${data.id}',
+  deleteMsg: 'Confirma exclusão de menu ${data.title}?',
+  listeners: {
+    onUpdateLoad: (form, name, data) => {
 
       if (name === 'photo') {
 
-        formUpdate.querySelector('img').src = '/'+data[name]
+          form.querySelector('img').src = '/'+data[name]
 
       } else {
 
-        let input = formUpdate.querySelector(`[name=${name}]`)
+          let input = form.querySelector(`[name=${name}]`)
 
-        if (input) {
+          if (input) {
 
-          input.value = data[name]
-        }
+            input.value = data[name]
+          }
 
       }
 
     }
-
-    $('#modal-update').modal('show')
-
-  })
-
-});
-
-// btn btn-xs btn-danger btn-delete
-
-arrayBtn = [...document.querySelectorAll('.btn-delete')]
-arrayBtn.forEach(btn => {
-
-  // Listener para botão de DELETE
-
-  btn.addEventListener('click', e => {
-
-    let tr = e.path.find (el => {
-      return el.tagName.toUpperCase() === 'TR'
-    })
-
-    let data = JSON.parse(tr.dataset.row)
-
-    if (confirm(`Confirma exclusão de menu ${data.title}?`)) {
-
-    //  fetch faz o request para o servidor 
-    //  É uma comando do ajax
-    //  let promise = fetch(url, [options])
-    //  /admin/menus/id vai deletar o registro
-
-      fetch(`/admin/menus/${data.id}`, {
-        method: 'DELETE'
-      })
-      // retorna como texto, entao tem que transformar para json
-      .then (response => response.json()) 
-      .then (json => {
-
-        window.location.reload()
-      })
-
-    }      
-  })
-
-});
-
-
-
+  }
+}) 
 
 </script>
