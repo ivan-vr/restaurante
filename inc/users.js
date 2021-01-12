@@ -43,6 +43,92 @@ module.exports = {
       
             })
         })
+    },
+
+    save (fields) {
+
+      return new Promise ((resolve, reject) => {
+  
+        let sql = ''
+  
+        let params = [fields.name, fields.email]
+  
+        if (parseInt(fields.id) > 0) {
+          // update
+
+          params.push(fields.id)
+  
+          sql = `update saboroso.tb_users
+          set name = ?, email = ?
+          where 
+          id = ?`
+  
+        } else {
+          // insert
+
+          params.push(fields.password)
+  
+          sql = `insert into saboroso.tb_users
+          (name, email, password)
+          values
+          (?, ?, ?)`
+  
+        }
+        conn.query(sql, params, (err, results) => {
+          if (err) {
+            reject (err)
+          } else {
+            resolve(results)
+          }
+        })
+  
+      })
+  
+    },
+  
+    delete(id) {
+      return new Promise((resolve, reject) => {
+  
+        sql = `delete from saboroso.tb_users where id = ?`
+  
+        conn.query(sql, [id], (err, results) => {
+  
+          if (err) {
+            reject(err)
+          } else {
+            resolve(results)
+          }
+  
+        })
+  
+      })
+    },
+  
+    getUsers() {
+
+      return new Promise((resolve, reject) => {
+  
+        let sql = `select * from saboroso.tb_users 
+                  order by name`
+  
+        conn.query(sql, (err, results) => {
+  
+          if (err) {
+  
+            reject(err)
+  
+          } else {
+  
+            resolve(results)
+  
+          }
+  
+        })
+  
+      })
     }
+
+
+
 }
 

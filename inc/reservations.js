@@ -30,14 +30,6 @@ module.exports = {
 
         } else {
 
-// //          console.log('>>>>>>>>>>>>>>> Results: ', results)
-// //          console.log('>>>>>>>>>>>>>>> TextRow : ', data)
-
-//           results.forEach(result => {
-//             console.log('>>>>>>>>>>>>>>> Result.date: ', result.date)
-//             console.log('>>>>>>>>>>>>>>> Result.fmt : ', toLocaleTimeString(result.date))
-  //         })
-      
           resolve(results)
 
         }
