@@ -126,9 +126,46 @@ module.exports = {
         })
   
       })
+    },
+
+
+    changePassword(fields) {
+
+      return new Promise ((resolve, reject) => {
+  
+        let sql = ''
+  
+        if (!fields.password) {
+
+          reject('Preencha a senha')
+
+        } else if (fields.password !== fields.passwordConfirm) {
+
+          reject('Confirme a senha corretamente')
+
+        } else {
+
+          sql = `update saboroso.tb_users
+          set password = ?
+          where 
+          id = ?`
+          
+          let params = [fields.password, fields.id]
+  
+          conn.query(sql, params, (err, results) => {
+            if (err) {
+              reject (err.message)
+            } else {
+              resolve(results)
+            }
+          })
+          
+        }
+  
+      })
+
     }
 
 
-
-}
+}  // module
 

@@ -223,13 +223,20 @@ router.get('/users', (req, res, next) => {
 
 router.post('/users', function (req, res, next) {
 
+  console.log('USERS post')
+
+
   users.save(req.fields)
     .then((results) => {
+
+      console.log('USERS Ok')
 
       res.send(results)
 
     })
     .catch((err) => {
+
+      console.log('USERS ERRO')
 
       res.send(err)
     })
@@ -250,5 +257,28 @@ router.delete('/users/:codigo', function (req, res, next) {
     })
 
 })
+
+
+router.post('/users/password-change', function (req, res, next) {
+
+  console.log('var alterar a pass')
+  users.changePassword(req.fields)
+    .then((results) => {
+
+      res.send(results)
+
+    })
+    .catch((err) => {
+
+      res.send({
+        error: err
+      })
+    })
+
+})
+
+
+
+
 
 module.exports = router;
