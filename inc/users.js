@@ -74,12 +74,15 @@ module.exports = {
           (?, ?, ?)`
   
         }
+
         conn.query(sql, params, (err, results) => {
+
           if (err) {
             reject (err)
           } else {
             resolve(results)
           }
+
         })
   
       })

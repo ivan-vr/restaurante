@@ -180,22 +180,15 @@
 
 <script>
 
-console.log('Inicio do script')
-
 new HcodeGrid ({
   deleteUrl: '/admin/users/${data.id}',
   deleteMsg: 'Confirma exclusão do usuário ${data.name}?',
   listeners: {
     buttonClick: (btn, data, e) => {
-      console.log('buttonClick: ', btn, data, e);
-      console.log('buttonClick: data.id: ',data.id);
 
       let formPassId = document.querySelector('#modal-update-password form [name=id]')
 
-      console.log('buttonClick:  a formPassId: ',formPassId);
-      
       formPassId.value = data.id
-  console.log('buttonClick: d formPassId: ',formPassId);
     
       $('#modal-update-password').modal().show()
     }

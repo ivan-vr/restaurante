@@ -2,8 +2,6 @@ class HcodeGrid {
 
     constructor(configs) {
 
-console.log('Entrou construtor HcodeGrid ')
-
         // Object  --> Define default e sobrescreve se chamador definiu o listener
         configs.listeners = Object.assign({
             afterUpdateClick: (e) =>  {
@@ -24,15 +22,11 @@ console.log('Entrou construtor HcodeGrid ')
             afterFormUpdateError: (e) =>  {
                 alert('Não foi possível enviar o formulário.')
             },
-            onUpdateLoad: (form, name, data) => {
+            onUpdateLoad: (formUpdate, name, data) => {
 
-                console.log('>>> onUpdateLoad  -  form : ', form);        
-
-                let input = form.querySelector(`[name=${name}]`)
+                let input = formUpdate.querySelector(`[name=${name}]`)
                 if (input) {
                     input.value = data[name]
-                    console.log('>>> onUpdateLoad  -  name : ', name);        
-                    console.log('>>> onUpdateLoad  -  value : ', input.value);        
                 }
             }
         }, configs.listeners)
@@ -46,67 +40,46 @@ console.log('Entrou construtor HcodeGrid ')
 
         this.options = Object.assign({}, configPadrao, configs)
 
-
- console.log('OPTIONS: ', this.options)
-
         // array com todas as tr's da tabela
         this.rows = [...document.querySelectorAll('table tbody tr')]
 
- console.log('ROWS: ', this.rows)
+        this.formCreate = document.querySelector(this.options.formCreate)
+        this.formUpdate = document.querySelector(this.options.formUpdate)
 
-         this.init ()
+        this.init ()
     }
 
 
     init () {
 
-        console.log('Inicio init --------------');
-
         this.initForms ()
 
         this.initButtons ()
-
-        console.log('Fim init --------------');
 
     }
 
 
     initForms (){
-      
-
-        console.log('Init forms ')
-
-        this.formCreate = document.querySelector(this.options.formCreate)
-
-        
-        console.log('Init forms formCreate: ', this.formCreate)
 
         this.formCreate.save({
             success: () => {
-                console.log('Init forms success')
 
                 this.fireEvent('afterFormCreate')
             },
             failure: () => {
-                console.log('Init forms failure')
 
                 this.fireEvent('afterFormCreateError')
             }
             
         })
 
-        this.formUpdate = document.querySelector(this.options.formUpdate)
-
-        console.log('Init forms formUpdate: ', this.formUpdate)
-
         this.formUpdate.save({
             success: () => {
-                console.log('Init forms success')
 
                 this.fireEvent('afterFormUpdate')
             },
             failure: () => {
-                console.log('Init forms failure')
+
                 this.fireEvent('afterFormUpdateError')
                 
             }
@@ -116,12 +89,6 @@ console.log('Entrou construtor HcodeGrid ')
 
     fireEvent(name, args) {
         
-        // name: 'buttonClick'
-        // args: [e.target, this.getTrData(e), e ]
-
-        console.log('fireEvent  name:  ', name)
-        console.log('fireEvent  function: ', this.options.listeners[name])
-
         if (typeof(this.options.listeners[name]) === 'function') {
 
             this.options.listeners[name].apply(this, args)
@@ -139,23 +106,18 @@ console.log('Entrou construtor HcodeGrid ')
         })
 
         // Como row é string, precisa usar o parse para criar um objeto 
-
         return JSON.parse(tr.dataset.row)
     }
 
     btnUpdateClick (e) {
-
-        console.log('>>>   btnUpdateClick -----------------');        
 
         //this.options.listeners.beforeUpdateClick(e)
         this.fireEvent('beforeUpdateClick', [e])
 
         let data = this.getTrData (e) 
 
-console.log('>>> data: ', data);        
+        //   Para cada propriedade da <tr>
         for (let name in data) {
-
-            console.log('>>> name: ', name);        
 
             this.fireEvent('onUpdateLoad', [this.formUpdate, name, data]) 
 
@@ -196,15 +158,10 @@ console.log('>>> data: ', data);
 
     initButtons () {
 
-        console.log('Init Buttons ')
-
-
         this.rows.forEach(row => {
 
             let arrayBtn = [...row.querySelectorAll('.btn')]
             arrayBtn.forEach(btn => {
-
-     //           console.log('Init Buttons - add click  ', btn)
 
                 btn.addEventListener('click', e => {
 
