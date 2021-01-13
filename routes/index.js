@@ -1,8 +1,9 @@
 var express = require('express');
-var conn = require('./../inc/db');
+
 var menus = require('./../inc/menus');
 var reservations = require('./../inc/reservations');
 var contacts = require('./../inc/contacts');
+var emails = require('./../inc/emails');
 
 var router = express.Router();
 
@@ -55,6 +56,27 @@ router.post('/contacts', function(req, res, next) {
 
       contacts.render(req, res, err.message)
       
+    })
+
+  }
+
+})
+/* POST home page. */
+router.post('/subscribe', function(req, res, next) {
+
+  if (!req.body.email) { 
+
+      res.send({error : { message: 'Digite o email'}})
+
+  } else {
+
+    emails.save (req).then((results) => {
+
+      res.send(results)
+      
+    }).catch ((err) => {
+
+      res.send(err)
     })
 
   }

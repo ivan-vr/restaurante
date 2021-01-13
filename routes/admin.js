@@ -6,6 +6,7 @@ var admin = require("./../inc/admin")
 var menus = require("./../inc/menus")
 var reservations = require("./../inc/reservations")
 var contacts = require("./../inc/contacts")
+var emails = require("./../inc/emails")
 
 moment.locale('pt-br');
 
@@ -105,17 +106,63 @@ router.get('/login', (req, res, next) => {
 
 })
 
+
 router.get('/contacts', (req, res, next) => {
 
-  res.render('admin/contacts', admin.getParams(req))
+  contacts.getContacts().then(data => {
+
+    res.render('admin/contacts', admin.getParams(req, {
+      data
+    }))
+
+  })
+
+})
+
+
+router.delete('/contacts/:codigo', function (req, res, next) {
+
+  contacts.delete(req.params.codigo)
+    .then((results) => {
+
+      res.send(results)
+
+    })
+    .catch((err) => {
+
+      res.send(err)
+    })
 
 })
 
 router.get('/emails', (req, res, next) => {
 
-  res.render('admin/emails', admin.getParams(req))
+  emails.getEmails().then(data => {
+
+    res.render('admin/emails', admin.getParams(req, {
+      data
+    }))
+
+  })
 
 })
+
+
+router.delete('/emails/:id', function (req, res, next) {
+
+  emails.delete(req.params.id)
+    .then((results) => {
+
+      res.send(results)
+
+    })
+    .catch((err) => {
+
+      res.send(err)
+    })
+
+})
+
 
 router.get('/menus', (req, res, next) => {
 

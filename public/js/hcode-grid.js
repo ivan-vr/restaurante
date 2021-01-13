@@ -61,29 +61,38 @@ class HcodeGrid {
 
     initForms (){
 
-        this.formCreate.save({
-            success: () => {
+        if (this.formCreate) {
 
-                this.fireEvent('afterFormCreate')
-            },
-            failure: () => {
-
-                this.fireEvent('afterFormCreateError')
-            }
-            
-        })
-
-        this.formUpdate.save({
-            success: () => {
-
-                this.fireEvent('afterFormUpdate')
-            },
-            failure: () => {
-
-                this.fireEvent('afterFormUpdateError')
+            this.formCreate.save({
+                success: () => {
+    
+                    this.fireEvent('afterFormCreate')
+                },
+                failure: () => {
+    
+                    this.fireEvent('afterFormCreateError')
+                }
                 
-            }
-        })
+            })
+        }
+
+
+
+        if (this.formUpdate) {
+            
+            this.formUpdate.save({
+                success: () => {
+    
+                    this.fireEvent('afterFormUpdate')
+                },
+                failure: () => {
+    
+                    this.fireEvent('afterFormUpdateError')
+                    
+                }
+            })
+        }
+        
       
     }
 

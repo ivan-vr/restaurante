@@ -14,7 +14,9 @@ HTMLFormElement.prototype.save = function (config) {
             method: form.method,
             body: formData
         })
-        .then(response => response.json())
+        .then(response => 
+            response.json()
+        )
         .then(json => { 
 
             if (json.error){
