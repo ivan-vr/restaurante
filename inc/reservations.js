@@ -1,4 +1,6 @@
+const { query } = require('./db');
 var conn = require('./db');
+const  Pagination  = require('./pagination');
 
 module.exports = {
 
@@ -15,28 +17,47 @@ module.exports = {
 
   },
 
-  getReservations() {
+//  getReservations(page, dtStart, dtEnd) { //req) {
 
-    return new Promise((resolve, reject) => {
 
-      let sql = `select * from saboroso.tb_reservations 
-                order by date desc, time desc`
+  getReservations(req) {
 
-      conn.query(sql, (err, results) => {
+    return new Promise ((resolve, reject) => {
+      
+       let page = req.query.page
+       let dtStart = req.query.start
+       let dtEnd = req.query.end
 
-        if (err) {
+      if (!page) page = 1
 
-          reject(err)
+      req.query.page = page
 
-        } else {
+      
+      let params = []
+      
+      if (dtStart && dtEnd) {
+  
+        params.push(dtStart, dtEnd)
+      }
+  
+  
+      let sql = `select sql_calc_found_rows * 
+                  from saboroso.tb_reservations 
+                  ${(dtStart && dtEnd) ? ' where date between ? and ? ' : ''}
+                  order by name 
+                  limit ?, ?`
+  
+      let pag = new Pagination(sql, params) 
+  
+      pag.getPage(page).then((data) => {
+        resolve ({
+          data,
+          links: pag.getNavigation( req.query) //page, dtStart, dtEnd)  
+        })
+      }) 
 
-          resolve(results)
+    }) 
 
-        }
-
-      })
-
-    })
   },
 
   save (fields) {

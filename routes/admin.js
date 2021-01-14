@@ -211,12 +211,27 @@ router.delete('/menus/:id', function (req, res, next) {
 
 router.get('/reservations', (req, res, next) => {
 
-  reservations.getReservations().then(data => {
+  // req.query  -- > Retorna a query string
+
+  let start = req.query.start
+  let end = req.query.end
+  if (!req.query.start) {
+    start = moment().subtract(10, 'year').format('YYYY-MM-DD')
+  }
+  if (!req.query.end) {
+    end = moment().format('YYYY-MM-DD')
+  }
+
+  req.query.start = start
+  req.query.end = end
+
+  reservations.getReservations(req).then(pag => {
 
     res.render('admin/reservations', admin.getParams(req, {
-      date: {},
-      data,
-      moment
+      date: { start, end },
+      data: pag.data,
+      moment,
+      links: pag.links
     }))
 
   })
@@ -315,9 +330,6 @@ router.post('/users/password-change', function (req, res, next) {
     })
 
 })
-
-
-
 
 
 module.exports = router;

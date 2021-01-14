@@ -1,6 +1,6 @@
 HTMLFormElement.prototype.save = function (config) {
 
-    // config : objeto com chaves sucess e failure
+    // config : objeto com chaves success e failure
 
     let form = this
 
