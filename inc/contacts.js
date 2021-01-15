@@ -2,6 +2,7 @@ var conn = require('./db');
 
 module.exports = {
 
+  
   render(req, res, error, success) {
 
     res.render('contacts', { 
@@ -15,6 +16,7 @@ module.exports = {
     
   },
   
+
   save (fields) {
 
     return new Promise ((resolve, reject) => {
@@ -36,6 +38,51 @@ module.exports = {
 
     })
 
+  },
+
+
+  getContacts() {
+
+    return new Promise((resolve, reject) => {
+
+      let sql = 'select * from saboroso.tb_contacts order by register desc'
+
+      conn.query(sql, (err, results) => {
+
+        if (err) {
+
+          reject(err)
+
+        } else {
+
+          resolve(results)
+
+        }
+
+      })
+
+    })
+  },
+
+
+  delete(id) {
+
+    return new Promise((resolve, reject) => {
+
+      sql = `delete from saboroso.tb_contacts where id = ?`
+
+      conn.query(sql, [id], (err, results) => {
+
+        if (err) {
+          reject(err)
+        } else {
+          resolve(results)
+        }
+
+      })
+
+    })
   }
+
 
 }
