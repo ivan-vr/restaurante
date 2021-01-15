@@ -1,6 +1,6 @@
 HTMLFormElement.prototype.save = function (config) {
 
-    // config : objeto com chaves sucess e failure
+    // config : objeto com chaves success e failure
 
     let form = this
 
@@ -14,7 +14,9 @@ HTMLFormElement.prototype.save = function (config) {
             method: form.method,
             body: formData
         })
-        .then(response => response.json())
+        .then(response => 
+            response.json()
+        )
         .then(json => { 
 
             if (json.error){

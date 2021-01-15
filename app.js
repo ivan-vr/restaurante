@@ -10,14 +10,35 @@ var RedisStore = require('connect-redis')(session)
 
 var formidable = require('formidable')
 
-var indexRouter = require('./routes/index');
-var adminRouter = require('./routes/admin');
+var http = require ('http')
+var socket = require ('socket.io')
 
 
 var app = express();
 
+var http = http.Server(app)
+var io = socket(http)
+
+io.on('connection', (socket) => {
+
+  console.log('novo usuario conectado')
+
+  // io.emit     - para todos os que estão conectados
+  // socket.emit - avisa apenas ao usuario que acabou de se conectar
+
+  // io.emit('reservations update', {   
+  //   date: new Date()
+  // })
+
+})
+
+var indexRouter = require('./routes/index')(io)
+var adminRouter = require('./routes/admin')(io)
+
 
 app.use(function (req, res, next) {
+
+  req.body = {}
 
   let contentType = req.headers["content-type"];
 
@@ -85,4 +106,10 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+http.listen(3000, function() {
+
+  console.log('servidor em execucao')
+
+})
+
+// module.exports = app;
