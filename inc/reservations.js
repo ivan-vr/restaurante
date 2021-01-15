@@ -67,6 +67,11 @@ module.exports = {
 
       let sql = ''
 
+      if (fields.date && fields.date.indexOf('/') > -1) {
+        let date = fields.date.split('/')
+        fields.date = `${date[2]}-${date[1]}-${date[0]}`
+      }
+
       let params = [fields.name, fields.email, fields.people, fields.date, fields.time]
 
       if (parseInt(fields.id) > 0) {
@@ -80,12 +85,6 @@ module.exports = {
 
       } else {
         // insert
-
-        if (fields.date.indexOf('/') > -1) {
-
-          let date = fields.date.split('/')
-          fields.date = `${date[2]}-${date[1]}-${date[0]}`
-        }
 
         sql = `insert into saboroso.tb_reservations
         (name,email,people,date,time)
