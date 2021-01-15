@@ -1,5 +1,6 @@
-const { query } = require('./db');
+//const { query } = require('./db');
 var conn = require('./db');
+var moment = require('moment');
 const  Pagination  = require('./pagination');
 
 module.exports = {
@@ -121,5 +122,79 @@ module.exports = {
       })
 
     })
-  }
+  },
+
+
+  chart(req) {
+
+    return new Promise ((resolve, request) => {
+
+      sql = `select 
+            concat(year(date), '-', month(date)) as date,
+            count(*) as total,
+            sum(people) / count(*) as avg_people
+            from 
+            saboroso.tb_reservations
+            where 
+            date between ? and ?
+            group by concat(year(date), '-', month(date)) 
+            order by date desc
+            `
+
+      conn.query(sql, [req.query.start, req.query.end], (err, results) => {
+
+        if (err) {
+          reject(err)
+        } else {
+
+          let months = []
+          let values = []
+
+          results.forEach(row => {
+
+            months.push(moment(row.date).format('MMM YYYY'))
+
+            values.push(row.total)
+            
+          })
+
+          resolve({
+            months,
+            values
+          })
+          
+        }
+
+     })
+
+
+    })
+
+  },
+
+  dashboard () {
+    return new Promise ((resolve, reject) => {
+
+        let sql = `SELECT
+                (SELECT COUNT(*) FROM tb_contacts) AS nrcontacts,
+                (SELECT COUNT(*) FROM tb_menus) AS nrmenus,
+                (SELECT COUNT(*) FROM tb_reservations) AS nrreservations,
+                (SELECT COUNT(*) FROM tb_users) AS nrusers;
+                `
+        conn.query(sql, (err, results) => {
+
+            if (err) {
+
+                reject(err)
+            } else {
+
+                resolve(results[0]) 
+            }
+
+        })
+    })
+},
+
+
+
 }
